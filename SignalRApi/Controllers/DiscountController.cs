@@ -14,7 +14,6 @@ namespace SignalRApi.Controllers
     {
         private readonly IDiscountService _discountService;
         private readonly IMapper _mapper;
-
         public DiscountController(IDiscountService discountService, IMapper mapper)
         {
             _discountService = discountService;
@@ -27,52 +26,33 @@ namespace SignalRApi.Controllers
             var value = _mapper.Map<List<ResultDiscountDto>>(_discountService.TGetListAll());
             return Ok(value);
         }
-
         [HttpPost]
-        public IActionResult CreateDiscount(CreateDiscountDto createDiscount)
+        public IActionResult CreateDiscount(CreateDiscountDto createDiscountDto)
         {
-            _discountService.TAdd(new Discount()
-            {
-                Title = createDiscount.Title,
-                Amount = createDiscount.Amount,
-                Description = createDiscount.Description,
-                ImageUrl = createDiscount.ImageUrl,
-                Status = createDiscount.Status
-
-            });
-            return Ok("İndirim Oluşturuldu");
+            var value = _mapper.Map<Discount>(createDiscountDto);
+            _discountService.TAdd(value);
+            return Ok("İndirim Bilgisi Eklendi");
         }
-
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteDiscount(int id)
         {
-            var values = _discountService.TGetByID(id);
-            _discountService.TDelete(values);
-            return Ok("İndirim Silindi");
+            var value = _discountService.TGetByID(id);
+            _discountService.TDelete(value);
+            return Ok("İndirim Bilgisi Silindi");
         }
-
-        [HttpGet("GetDiscount")]
+        [HttpGet("{id}")]
         public IActionResult GetDiscount(int id)
         {
             var value = _discountService.TGetByID(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetDiscountDto>(value));
         }
         [HttpPut]
-
-        public IActionResult UpdateDiscount(UpdateDiscountDto updateDiscount)
+        public IActionResult UpdateDiscount(UpdateDiscountDto updateDiscountDto)
         {
-            _discountService.TUpdate(new Discount()
-            {
-                DiscountID = updateDiscount.DiscountID,
-                Title = updateDiscount.Title,
-                Amount = updateDiscount.Amount,
-                Description = updateDiscount.Description,
-                ImageUrl = updateDiscount.ImageUrl,
-                Status = updateDiscount.Status,
-            });
-            return Ok("İndirim Güncellendi");
+            var value = _mapper.Map<Discount>(updateDiscountDto);
+            _discountService.TUpdate(value);
+            return Ok("İndirim Bilgisi Güncellendi");
         }
-
-
+        
     }
 }
