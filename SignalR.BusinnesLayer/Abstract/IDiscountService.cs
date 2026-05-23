@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace SignalR.BusinnesLayer.Abstract
 {
-    public interface IDiscountService  : IGenericService<Discount>
+    public interface IDiscountService : IGenericService<Discount>
     {
+        void TChangeStatusToTrue(int id);
+        void TChangeStatusToFalse(int id);
+        List<Discount> TGetListByStatusTrue();
     }
 }
