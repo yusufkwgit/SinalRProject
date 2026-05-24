@@ -1,0 +1,336 @@
+﻿@model SignalRWebUi.Dtos.IdentityDto.RegisterDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>SignalR Restoran Kayıt</title>
+	<!-- Mobile Specific Metas -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<!-- Font-->
+	<link rel="stylesheet" type="text/css" href="~/colorlib-regform-32/css/nunito-font.css">
+	<!-- Main Style Css -->
+	<link rel="stylesheet" href="~/colorlib-regform-32/css/style.css" />
+</head>
+<body class="form-v6">
+	<div class="page-content">
+		<div class="form-v6-content">
+			<div class="form-left">
+				<img src="~/colorlib-regform-32/images/Sauce1.jpg" alt="form" style="width:484px; height:584px">
+			</div>
+			<form class="form-detail" method="post">
+				<h2>Yeni Kullanıcı Kaydı</h2>
+				<div class="form-row">
+					<input type="text" id="full-name" asp-for="Name" class="input-text" placeholder="Adınız" required>
+				</div>
+				<div class="form-row">
+					<input type="text" id="full-name" class="input-text" placeholder="Soyadınız" required asp-for="Surname">
+				</div>
+				<div class="form-row">
+					<input type="text" id="full-name" class="input-text" placeholder="Kullanıcı Adınız" required asp-for="Username">
+				</div>
+				<div class="form-row">
+					<input type="text" id="your-email" class="input-text" placeholder="Email  Addresiniz" asp-for="Mail" required pattern="[^@@]+@@[^@@]+.[a-zA-Z]{2,6}">
+				</div>
+				<div class="form-row">
+					<input type="password" id="password" class="input-text" placeholder="Şifreniz" asp-for="Password" required>
+				</div>
+
+				<button class="btn btn-primary">Kayıt Ol</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html> 
+
+@*@model SignalRWebUi.Dtos.IdentityDto.RegisterDto
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>SignalR Restoran Kayıt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f0ebe3;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .wrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 860px;
+            min-height: 540px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+        }
+
+        /* --- Left panel --- */
+        .left {
+            background: #1a1208;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2.5rem;
+            overflow: hidden;
+        }
+
+        .left-img {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80') center/cover no-repeat;
+            opacity: 0.55;
+        }
+
+        .left-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(15,10,3,0.92) 0%, rgba(15,10,3,0.2) 60%);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(245,230,200,0.12);
+            border: 0.5px solid rgba(245,230,200,0.25);
+            border-radius: 20px;
+            padding: 5px 14px;
+            color: #f5e6c8;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+            width: fit-content;
+        }
+
+        .badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #c9a96e;
+        }
+
+        .left-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .left-text h1 {
+            font-family: 'Playfair Display', serif;
+            color: #f5e6c8;
+            font-size: 30px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .left-text p {
+            color: #b8a98a;
+            font-size: 13px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* --- Right panel --- */
+        .right {
+            background: #ffffff;
+            padding: 2.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .right h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 500;
+            color: #1a1208;
+            margin-bottom: 4px;
+        }
+
+        .right .sub {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 1.75rem;
+        }
+
+        .field {
+            margin-bottom: 14px;
+            position: relative;
+        }
+
+        .field label {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            color: #888;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .field input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #e8e0d4;
+            border-radius: 10px;
+            padding: 0 12px 0 38px;
+            font-size: 13px;
+            color: #1a1208;
+            background: #faf8f5;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.15s, background 0.15s;
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: #c9a96e;
+            background: #fff;
+        }
+
+        .field input::placeholder {
+            color: #bbb;
+        }
+
+        .field .ico {
+            position: absolute;
+            bottom: 13px;
+            left: 12px;
+            font-size: 16px;
+            color: #bbb;
+            pointer-events: none;
+        }
+
+        .row2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 44px;
+            background: #c9a96e;
+            border: none;
+            border-radius: 10px;
+            color: #1a1208;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            transition: background 0.15s, transform 0.1s;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background: #b8975a;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        .footer-note a {
+            color: #c9a96e;
+            text-decoration: none;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+
+        <!-- Sol panel -->
+        <div class="left">
+            <div class="left-img"></div>
+            <div class="left-overlay"></div>
+            <div class="badge">
+                <span class="dot"></span> SignalR Restoran
+            </div>
+            <div class="left-text">
+                <h1>Lezzetin<br>dijital adresi</h1>
+                <p>Hesabınızı oluşturun,<br>deneyimi keşfedin.</p>
+            </div>
+        </div>
+
+        <!-- Sağ panel - Form -->
+        <div class="right">
+            <h2>Yeni Kayıt</h2>
+            <p class="sub">Birkaç saniyede hesabınızı oluşturun</p>
+
+            <form method="post">
+                <div class="row2">
+                    <div class="field">
+                        <label>Ad</label>
+                        <input type="text" asp-for="Name" placeholder="Adınız" required>
+                        <i class="ti ti-user ico"></i>
+                    </div>
+                    <div class="field">
+                        <label>Soyad</label>
+                        <input type="text" asp-for="Surname" placeholder="Soyadınız" required>
+                        <i class="ti ti-user ico"></i>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" asp-for="Username" placeholder="Kullanıcı adınız" required>
+                    <i class="ti ti-at ico"></i>
+                </div>
+
+                <div class="field">
+                    <label>E-posta</label>
+                    <input type="email" asp-for="Mail">
+                    <i class="ti ti-mail ico"></i>
+                </div>
+
+                <div class="field">
+                    <label>Şifre</label>
+                    <input type="password" asp-for="Password" placeholder="••••••••" required>
+                    <i class="ti ti-lock ico"></i>
+                </div>
+
+                <button type="submit" class="btn-submit">Kayıt Ol</button>
+            </form>
+
+            <p class="footer-note">Zaten üye misiniz? <a href="#">Giriş yapın</a></p>
+        </div>
+
+    </div>
+</body>
+</html>
+ *@
