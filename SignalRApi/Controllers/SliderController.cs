@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SignalR.BusinnesLayer.Abstract;
+using SignalR.DtoLayer.SliderDto;
 using SignalR.EntityLayer.Entities;
 
 namespace SignalRApi.Controllers
@@ -21,7 +22,36 @@ namespace SignalRApi.Controllers
         [HttpGet]
         public IActionResult SliderList()
         {
-           return Ok(_sliderService.TGetListAll());
+            var value = _mapper.Map<List<ResultSliderDto>>(_sliderService.TGetListAll());
+            return Ok(value);
+        }
+        [HttpPost]
+        public IActionResult CreateSlider(CreateSliderDto createSliderDto)
+        {
+            var value = _mapper.Map<Slider>(createSliderDto);
+            _sliderService.TAdd(value);
+            return Ok("Öne Çıkan Bilgisi Eklendi");
+        }
+        [HttpDelete("{id}")]
+        public IActionResult DeleteSlider(int id)
+        {
+            var value = _sliderService.TGetByID(id);
+            _sliderService.TDelete(value);
+            return Ok("Öne Çıkan Bilgisi Silindi");
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetSlider(int id)
+        {
+            var value = _sliderService.TGetByID(id);
+            return Ok(_mapper.Map<GetByIdSliderDto>(value));
+        }
+        [HttpPut]
+        public IActionResult UpdateSlider(UpdateSliderDto updateSliderDto)
+        {
+            var value = _mapper.Map<Slider>(updateSliderDto);
+            _sliderService.TUpdate(value);
+            return Ok("Öne Çıkan Alan Bilgisi Güncellendi");
         }
     }
 }

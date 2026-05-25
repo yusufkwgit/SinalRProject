@@ -14,6 +14,7 @@ namespace SignalRApi.Controllers
     {
         private readonly IContactService _contactService;
         private readonly IMapper _mapper;
+
         public ContactController(IContactService contactService, IMapper mapper)
         {
             _contactService = contactService;
@@ -26,51 +27,32 @@ namespace SignalRApi.Controllers
             var value = _mapper.Map<List<ResultContactDto>>(_contactService.TGetListAll());
             return Ok(value);
         }
-
         [HttpPost]
         public IActionResult CreateContact(CreateContactDto createContactDto)
         {
-            _contactService.TAdd(new Contact()
-            {
-                Location = createContactDto.Location,
-                Phone = createContactDto.Phone,
-                Mail = createContactDto.Mail,
-                FooterTitle = createContactDto.FooterTitle,
-                FooterDescription = createContactDto.FooterDescription
-
-            });
-            return Ok("İletişim Oluşturuldu");
+            var value = _mapper.Map<Contact>(createContactDto);
+            _contactService.TAdd(value);
+            return Ok("İletişim Bilgisi Eklendi");
         }
-
         [HttpDelete("{id}")]
         public IActionResult DeleteContact(int id)
         {
-            var values = _contactService.TGetByID(id);
-            _contactService.TDelete(values);
-            return Ok("İletişim Silindi");
+            var value = _contactService.TGetByID(id);
+            _contactService.TDelete(value);
+            return Ok("İletişim Bilgisi Silindi");
         }
-
         [HttpGet("{id}")]
         public IActionResult GetContact(int id)
         {
             var value = _contactService.TGetByID(id);
-            return Ok(value);
+            return Ok(_mapper.Map<GetContactDto>(value));
         }
         [HttpPut]
-
-        public IActionResult UpdateContact(UpdateContactDto updateContact)
+        public IActionResult UpdateContact(UpdateContactDto updateContactDto)
         {
-            _contactService.TUpdate(new Contact()
-            {
-                ContactID = updateContact.ContactID,
-                Location = updateContact.Location,
-                Phone = updateContact.Phone,
-                Mail = updateContact.Mail,
-                FooterTitle = updateContact.FooterTitle,
-                FooterDescription = updateContact.FooterDescription
-            });
-            return Ok("İletişim Güncellendi");
+            var value = _mapper.Map<Contact>(updateContactDto);
+            _contactService.TUpdate(value);
+            return Ok("İletişim Bilgisi Güncellendi");
         }
-
     }
 }
