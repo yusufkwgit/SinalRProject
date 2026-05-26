@@ -19,6 +19,16 @@ namespace SignalR.BusinnesLayer.Concrete
             _productDal = productDal;
         }
 
+        public string TProductNameByMaxPrice()
+        {
+            return _productDal.ProductNameByMaxPrice();
+        }
+
+        public string TProductNameByMinPrice()
+        {
+            return _productDal.ProductNameByMinPrice();
+        }
+
         public void TAdd(Product entity)
         {
             _productDal.Add(entity);
@@ -39,14 +49,9 @@ namespace SignalR.BusinnesLayer.Concrete
             return _productDal.GetListAll();
         }
 
-        public List<Product> TGetProductsWithCategory()
+        public List<Product> TGetProductsWithCategories()
         {
-            return _productDal.GetProductsWithCategory();
-        }
-
-        public decimal TProductAvgPriceByHamburger()
-        {
-            return _productDal.ProductAvgPriceByHamburger();
+            return _productDal.GetProductsWithCategories();
         }
 
         public int TProductCount()
@@ -64,16 +69,6 @@ namespace SignalR.BusinnesLayer.Concrete
             return _productDal.ProductCountByCategoryNameHamburger();
         }
 
-        public string TProductNameByMaxPrice()
-        {
-            return _productDal.ProductNameByMaxPrice();
-        }
-
-        public string TProductNameByMinPrice()
-        {
-           return _productDal.ProductNameByMinPrice();
-        }
-
         public decimal TProductPriceAvg()
         {
             return _productDal.ProductPriceAvg();
@@ -82,6 +77,31 @@ namespace SignalR.BusinnesLayer.Concrete
         public void TUpdate(Product entity)
         {
             _productDal.Update(entity);
+        }
+
+        public decimal TProductAvgPriceByHamburger()
+        {
+            return _productDal.ProductAvgPriceByHamburger();
+        }
+
+        public decimal TProductPriceBySteakBurger()
+        {
+            return _productDal.ProductPriceBySteakBurger();
+        }
+
+        public decimal TTotalPriceByDrinkCategory()
+        {
+            return _productDal.TotalPriceByDrinkCategory();
+        }
+
+        public decimal TTotalPriceBySaladCategory()
+        {
+            return _productDal.TotalPriceBySaladCategory();
+        }
+
+        public List<Product> TGetLast9Products()
+        {
+            return _productDal.GetLast9Products();
         }
     }
 }
