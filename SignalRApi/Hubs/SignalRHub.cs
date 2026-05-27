@@ -137,6 +137,4 @@ namespace SignalRApi.Hubs
             await base.OnDisconnectedAsync(exception);
         }
     }
-
 }
-

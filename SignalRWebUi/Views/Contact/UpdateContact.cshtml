@@ -1,6 +1,7 @@
 ﻿@model SignalRWebUi.Dtos.ContactDto.UpdateContactDto
+
 @{
-    ViewData["Title"] = "UpdateContact";
+    ViewData["Title"] = "CreateContact";
     Layout = "~/Views/AdminLayout/Index.cshtml";
 }
 
@@ -41,6 +42,24 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group">
+                                <label for="OpenDays">Açık Günler</label>
+                                <input type="text" class="form-control" asp-for="OpenDays" id="OpenDays">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="OpenDaysDescription">Açık Günler Açıklama</label>
+                                <input type="text" class="form-control" asp-for="OpenDaysDescription" id="OpenDaysDescription">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="OpenHours">Açık Saatler</label>
+                                <input type="text" class="form-control" asp-for="OpenHours" id="OpenHours">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
                                 <label for="Description">Açıklama Giriniz</label>
                                 <textarea rows="5" class="form-control" asp-for="FooterDescription" id="Description"></textarea>
                             </div>
@@ -54,4 +73,3 @@
         </div>
     </div>
 </div>
-
