@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUi.Dtos.BasketDto;
 using SignalRWebUi.Dtos.ProductDto;
@@ -13,10 +13,14 @@ namespace SignalRWebUi.Controllers
         {
             _httpClientFactory = httpClientFactory;
         }
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id = 0)
         {
+            if (id == 0 && Request.Cookies.TryGetValue("MenuTableId", out string cookieId))
+            {
+                int.TryParse(cookieId, out id);
+            }
+
             ViewBag.v = id; // Burada MenuTableId değerini ayarlıyoruz
-                            // TempData["x"] = id; // Eğer bunu kullanıyorsanız
 
             var client = _httpClientFactory.CreateClient();
             var responseMessage = await client.GetAsync("https://localhost:7195/api/Product/ProductListWithCategory");
@@ -27,8 +31,13 @@ namespace SignalRWebUi.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddBasket(int id, int menuTableId)
+        public async Task<IActionResult> AddBasket(int id, int menuTableId = 0)
         {
+            if (menuTableId == 0 && Request.Cookies.TryGetValue("MenuTableId", out string cookieId))
+            {
+                int.TryParse(cookieId, out menuTableId);
+            }
+
             if (menuTableId == 0)
             {
                 return BadRequest("MenuTableId 0 geliyor.");

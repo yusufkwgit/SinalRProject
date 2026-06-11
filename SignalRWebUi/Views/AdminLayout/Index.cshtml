@@ -1,10 +1,16 @@
-﻿@{
+@{
 	Layout = null;
 }
 
 <!DOCTYPE html>
 <html>
 @await Component.InvokeAsync("_LayoutHeaderPartialComponent")
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <style>
+        .toast-top-right { top: 70px; right: 12px; }
+    </style>
+</head>
 <body>
 	<div class="wrapper">
 		@await Component.InvokeAsync("_LayoutNavbarPartialComponent")
@@ -15,8 +21,10 @@
             @await Component.InvokeAsync("_LayoutFooterPartialComponent")
 		</div>
 	</div>
-	</div>
-	</div>
+
+    <!-- Notification Sound -->
+    <audio id="notificationSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
+
 	<!-- Modal -->
 	<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -40,6 +48,48 @@
 		</div>
 	</div>
     @await Component.InvokeAsync("_LayoutScriptPartialComponent")
+    
+    <!-- Global SignalR and Toastr Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            toastr.options = {
+              "closeButton": true,
+              "debug": false,
+              "newestOnTop": true,
+              "progressBar": true,
+              "positionClass": "toast-top-right",
+              "preventDuplicates": false,
+              "onclick": null,
+              "showDuration": "300",
+              "hideDuration": "1000",
+              "timeOut": "5000",
+              "extendedTimeOut": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+            };
+
+            var globalConnection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7195/SignalRHub").build();
+            globalConnection.start().then(() => {
+                console.log("Global SignalR Connected for Notifications");
+            }).catch((err) => { console.log("Global SignalR Error: ", err) });
+
+            globalConnection.on("ReceiveNewOrderNotification", (message) => {
+                toastr.success(message, 'Yeni Sipariş!');
+                var audio = document.getElementById('notificationSound');
+                if (audio) {
+                    audio.play().catch(e => console.log("Audio play error:", e));
+                }
+                
+                // If the current page has a GetMenuTableStatus invoker, we can trigger it.
+                // Usually TableListByStatus page will have its own listener or we can trigger a custom event.
+                $(document).trigger("OrderReceived");
+            });
+        });
+    </script>
 </body>
 </html>
 

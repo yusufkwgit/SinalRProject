@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using QRCoder;
-using System.Drawing;
-using System.Drawing.Imaging;
+
 namespace SignalRWebUi.Controllers
 {
     public class QRCodeController : Controller
@@ -15,18 +14,19 @@ namespace SignalRWebUi.Controllers
         [HttpPost]
         public IActionResult Index(string value)
         {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
+            if (string.IsNullOrEmpty(value)) return View();
 
-                QRCodeGenerator createQRCode = new QRCodeGenerator();
-                QRCodeGenerator.QRCode squareCode = createQRCode.CreateQrCode(value, QRCodeGenerator.ECCLevel.Q);
-                    using (Bitmap image = squareCode.GetGraphic(10))
-                    {
-                        image.Save(memoryStream, ImageFormat.Png);
-                    ViewBag.QrCodeImage = "data:image/png;base64," + Convert.ToBase64String(memoryStream.ToArray()); 
-                    }
-            }
+            string url = $"https://10.63.145.6:7126/Default/Index?tableName={value}";
+            
+            QRCodeGenerator createQRCode = new QRCodeGenerator();
+            QRCodeData qrCodeData = createQRCode.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeBytes = qrCode.GetGraphic(10);
+            
+            ViewBag.QrCodeImage = "data:image/png;base64," + Convert.ToBase64String(qrCodeBytes);
+            
             return View();
         }
     }
 }
+

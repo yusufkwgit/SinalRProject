@@ -1,4 +1,4 @@
-﻿@model List<SignalRWebUi.Dtos.BasketDto.ResultBasketDto>
+@model List<SignalRWebUi.Dtos.BasketDto.ResultBasketDto>
 @{
     Layout = null;
     int count = 0;
@@ -104,6 +104,51 @@
 
     @await Component.InvokeAsync("_UILayoutScriptComponentPartial")
 
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            var apiHost = "https://" + window.location.hostname + ":7195";
+
+            var connection = new signalR.HubConnectionBuilder().withUrl(apiHost + "/SignalRHub").build();
+            connection.start().then(() => {
+                console.log("SignalR Connected for Basket");
+            }).catch((err) => { console.log(err) });
+
+            $("#btnchecked").click(function (e) {
+                e.preventDefault();
+                let tableId = @(TempData["id"] ?? 0);
+                if(tableId === 0) {
+                    Swal.fire('Hata', 'Masa ID bulunamadı.', 'error');
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: apiHost + "/api/MenuTables/CompleteOrder",
+                    data: JSON.stringify(tableId),
+                    contentType: "application/json",
+                    success: function (res) {
+                        Swal.fire({
+                            title: 'Başarılı!',
+                            text: 'Siparişiniz başarıyla alındı.',
+                            icon: 'success',
+                            confirmButtonText: 'Tamam'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // SignalR tetiklemesi (Tüm masaların statüsünü yenilet)
+                                connection.invoke("GetMenuTableStatus");
+                                window.location.href = "/Default/Index";
+                            }
+                        });
+                    },
+                    error: function (err) {
+                        Swal.fire('Hata', 'Sipariş tamamlanırken bir hata oluştu.', 'error');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

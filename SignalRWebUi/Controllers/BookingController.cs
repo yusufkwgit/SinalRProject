@@ -1,4 +1,4 @@
-ï»¿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUi.Dtos.BookingDto;
 using System.Text;
@@ -32,7 +32,7 @@ namespace SignalRWebUi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBooking(CreateBookingDto createBookingDto)
         {
-            createBookingDto.Description = "Rezervasyon AlÄ±ndÄ±";
+            createBookingDto.Description = "Rezervasyon Alýndý";
             var client = _httpClientFactory.CreateClient();
             var jsonData = JsonConvert.SerializeObject(createBookingDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");

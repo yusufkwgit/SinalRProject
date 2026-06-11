@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
@@ -15,15 +15,8 @@ namespace SignalRWebUi.Controllers
         {
             _httpClientFactory = httpClientFactory;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string tableName = null)
         {
-            //var client = _httpClientFactory.CreateClient();
-            //var responseMessage = await client.GetAsync("https://localhost:7195/api/Contact");
-            //var jsonData = await responseMessage.Content.ReadAsStringAsync();
-            ////var values = JsonConvert.DeserializeObject<ResultContactDto>(jsonData);
-            //JsonObject item=JsonObject.Parse(jsonData);
-            //ViewBag.location = jsonData[0].ToString();
-
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync("https://localhost:7195/api/Contact");
             response.EnsureSuccessStatusCode();
@@ -31,6 +24,24 @@ namespace SignalRWebUi.Controllers
             JArray item = JArray.Parse(responseBody);
             string value = item[0]["location"].ToString();
             ViewBag.location = value;
+
+            if (!string.IsNullOrEmpty(tableName))
+            {
+                HttpClient tableClient = new HttpClient();
+                string encodedTableName = Uri.EscapeDataString(tableName);
+                var tableResponse = await tableClient.GetAsync($"https://localhost:7195/api/MenuTables/GetMenuTableIdByName/{encodedTableName}");
+                if (tableResponse.IsSuccessStatusCode)
+                {
+                    string tableId = await tableResponse.Content.ReadAsStringAsync();
+                    Response.Cookies.Append("MenuTableId", tableId, new CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddHours(2),
+                        HttpOnly = false,
+                        IsEssential = true
+                    });
+                }
+            }
+
             return View();
         }
 

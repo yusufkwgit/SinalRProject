@@ -1,4 +1,4 @@
-ï»¿@model List<SignalRWebUi.Dtos.BookingDto.ResultBookingDto>
+@model List<SignalRWebUi.Dtos.BookingDto.ResultBookingDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -36,12 +36,12 @@
 									 <th scope="col">#</th>
 									 <th scope="col">Ad Soyad</th>
 									 <th scope="col">Telefon</th>
-									 <th scope="col">KiÅŸi SayÄ±sÄ±</th>
+									 <th scope="col">Kiþi Sayýsý</th>
 									 <th scope="col">Rezervasyon Durumu</th>
 									 <th scope="col">Sil</th>
-									 <th scope="col">GÃ¼ncelle</th>
+									 <th scope="col">Güncelle</th>
 									 <th scope="col">Onayla</th>
-									 <th scope="col">Ä°ptal Et</th>
+									 <th scope="col">Ýptal Et</th>
 									 </tr>
 									 </thead>
 									 <tbody>`
@@ -53,9 +53,9 @@
 									<td>${item.personCount}</td>
 									<td>${item.description}</td>
 									<td><a href="/Booking/DeleteBooking/${item.bookingID}" class="btn btn-outline-danger">Sil</a></td>
-									<td><a href="/Booking/UpdateBooking/${item.bookingID}" class="btn btn-outline-success">GÃ¼ncelle</a></td>
+									<td><a href="/Booking/UpdateBooking/${item.bookingID}" class="btn btn-outline-success">Güncelle</a></td>
 									<td><a href="/Booking/BookingStatusApproved/${item.bookingID}" class="btn btn-outline-info">Onayla</a></td>
-									<td><a href="/Booking/BookingStatusCancelled/${item.bookingID}" class="btn btn-outline-dark">Ä°ptal Et</a></td>
+									<td><a href="/Booking/BookingStatusCancelled/${item.bookingID}" class="btn btn-outline-dark">Ýptal Et</a></td>
 									</tr>`
 					});
 					tablehtml += "</tbody></table>";
@@ -65,7 +65,7 @@
 
 		</script>
 
-		<h4 class="page-title">Rezervasyon Ä°ÅŸlemleri</h4>
+		<h4 class="page-title">Rezervasyon Ýþlemleri</h4>
 		<div class="row">
 			<div class="col-md-12">
 
@@ -75,10 +75,10 @@
 					</div>
 					<div class="card-body">
 						<div class="card-sub">
-							Rezervasyon ile ilgili iÅŸlemleri aÅŸaÄŸÄ±dan gerÃ§ekleÅŸtirebilirsiniz.
+							Rezervasyon ile ilgili iþlemleri aþaðýdan gerçekleþtirebilirsiniz.
 						</div>
 						<div id="bookingList"></div>
-						<a href="/Booking/CreateBooking/" class="btn btn-outline-primary">Yeni Rezervasyon GiriÅŸi</a>
+						<a href="/Booking/CreateBooking/" class="btn btn-outline-primary">Yeni Rezervasyon Giriþi</a>
 
 					</div>
 				</div>

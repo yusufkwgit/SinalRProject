@@ -1,0 +1,120 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+@await Component.InvokeAsync("_UILayoutHeadComponentPartial")
+
+<body class="sub_page">
+
+    @await Component.InvokeAsync("_MenuNavbarComponentPartial")
+
+    <section class="food_section layout_padding">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>
+                    Leziz Tarifler
+                </h2>
+                <p class="mt-3" style="color: #666;">Şefimizin gizli mutfağından, evde kolayca hazırlayabileceğiniz özel restoran tarifleri!</p>
+            </div>
+
+            <div class="row mt-5">
+                <!-- Tarif 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="bg-light text-center p-4">
+                            <img src="/feane-1.0.0/images/f2.png" class="img-fluid" style="max-height: 180px;" alt="Steak Burger">
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title font-weight-bold" style="font-family: 'Dancing Script', cursive; font-size: 28px;">Ev Yapımı Steak Burger</h5>
+                            <p class="card-text text-muted mb-4">100% dana eti, karamelize soğan ve özel cheddar sosuyla hazırlanan efsanevi burger tarifimiz.</p>
+                            <a href="#" onclick="swal('Tarif Yakında!', 'Şefimiz bu gizli tarifi yakında sizinle paylaşacak.', 'info')" class="btn btn-warning text-white rounded-pill px-4 py-2 font-weight-bold">Tarifi İncele</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarif 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="bg-light text-center p-4">
+                            <img src="/feane-1.0.0/images/f1.png" class="img-fluid" style="max-height: 180px;" alt="İtalyan Pizza">
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title font-weight-bold" style="font-family: 'Dancing Script', cursive; font-size: 28px;">Gerçek İtalyan Pizzası</h5>
+                            <p class="card-text text-muted mb-4">İncecik çıtır hamur üzerinde taze fesleğen ve orijinal mozzarella peynirinin eşsiz uyumu.</p>
+                            <a href="#" onclick="swal('Tarif Yakında!', 'Şefimiz bu gizli tarifi yakında sizinle paylaşacak.', 'info')" class="btn btn-warning text-white rounded-pill px-4 py-2 font-weight-bold">Tarifi İncele</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarif 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="bg-light text-center p-4">
+                            <img src="/feane-1.0.0/images/f4.png" class="img-fluid" style="max-height: 180px;" alt="Spagetti">
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title font-weight-bold" style="font-family: 'Dancing Script', cursive; font-size: 28px;">Orijinal Spagetti Bolonez</h5>
+                            <p class="card-text text-muted mb-4">Ağır ağır pişmiş kıymalı domates sosuyla klasikleşmiş bir İtalyan makarna deneyimi.</p>
+                            <a href="#" onclick="swal('Tarif Yakında!', 'Şefimiz bu gizli tarifi yakında sizinle paylaşacak.', 'info')" class="btn btn-warning text-white rounded-pill px-4 py-2 font-weight-bold">Tarifi İncele</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <!-- Tarif 4 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="bg-light text-center p-4">
+                            <img src="/feane-1.0.0/images/salad.png" class="img-fluid" style="max-height: 180px;" alt="Akdeniz Salatası">
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title font-weight-bold" style="font-family: 'Dancing Script', cursive; font-size: 28px;">Taze Akdeniz Salatası</h5>
+                            <p class="card-text text-muted mb-4">Mevsim yeşillikleri, sızma zeytinyağı ve taze limon sosuyla hazırlanmış sağlıklı ve ferah bir lezzet.</p>
+                            <a href="#" onclick="swal('Tarif Yakında!', 'Şefimiz bu gizli tarifi yakında sizinle paylaşacak.', 'info')" class="btn btn-warning text-white rounded-pill px-4 py-2 font-weight-bold">Tarifi İncele</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarif 5 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="bg-light text-center p-4">
+                            <img src="/feane-1.0.0/images/pudding.png" class="img-fluid" style="max-height: 180px;" alt="Çikolatalı Puding">
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title font-weight-bold" style="font-family: 'Dancing Script', cursive; font-size: 28px;">Belçika Çikolatalı Puding</h5>
+                            <p class="card-text text-muted mb-4">Yoğun Belçika çikolatası ile hazırlanan, ağızda eriyen yumuşacık ve nefis ev yapımı tatlımız.</p>
+                            <a href="#" onclick="swal('Tarif Yakında!', 'Şefimiz bu gizli tarifi yakında sizinle paylaşacak.', 'info')" class="btn btn-warning text-white rounded-pill px-4 py-2 font-weight-bold">Tarifi İncele</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tarif 6 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="bg-light text-center p-4">
+                            <img src="/feane-1.0.0/images/f5.png" class="img-fluid" style="max-height: 180px;" alt="Çıtır Patates">
+                        </div>
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title font-weight-bold" style="font-family: 'Dancing Script', cursive; font-size: 28px;">Özel Baharatlı Patates</h5>
+                            <p class="card-text text-muted mb-4">Özel baharat karışımımızla harmanlanan, dışı çıtır çıtır içi yumuşacık altın sarısı patatesler.</p>
+                            <a href="#" onclick="swal('Tarif Yakında!', 'Şefimiz bu gizli tarifi yakında sizinle paylaşacak.', 'info')" class="btn btn-warning text-white rounded-pill px-4 py-2 font-weight-bold">Tarifi İncele</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    @await Component.InvokeAsync("_UILayoutFooterComponentPartial")
+
+    @await Component.InvokeAsync("_UILayoutScriptComponentPartial")
+
+</body>
+
+</html>

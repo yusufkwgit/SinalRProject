@@ -1,4 +1,4 @@
-﻿using SignalR.BusinnesLayer.Abstract;
+using SignalR.BusinnesLayer.Abstract;
 using SignalR.DataAccessLayer.Abstract;
 using SignalR.EntityLayer.Entities;
 using System;
@@ -55,6 +55,36 @@ namespace SignalR.BusinnesLayer.Concrete
         public void TUpdate(MenuTable entity)
         {
             _menuTableDal.Update(entity);
+        }
+
+        public void TApproveOrder(int id)
+        {
+            _menuTableDal.ApproveOrder(id);
+        }
+
+        public void TRejectOrder(int id)
+        {
+            _menuTableDal.RejectOrder(id);
+        }
+
+        public void TTransferTable(int oldTableId, int newTableId)
+        {
+            _menuTableDal.TransferTable(oldTableId, newTableId);
+        }
+
+        public void TCloseTablePayment(int tableId)
+        {
+            _menuTableDal.CloseTablePayment(tableId);
+        }
+
+        public void TAddProductToOrder(int orderId, int productId)
+        {
+            _menuTableDal.AddProductToOrder(orderId, productId);
+        }
+
+        public void TRemoveProductFromOrder(int orderDetailId)
+        {
+            _menuTableDal.RemoveProductFromOrder(orderDetailId);
         }
     }
 }

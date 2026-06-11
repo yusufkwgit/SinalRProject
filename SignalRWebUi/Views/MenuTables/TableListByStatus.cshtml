@@ -1,92 +1,293 @@
-﻿@model List<SignalRWebUi.Dtos.MenuTableDto.ResultMenuTableDto>
+@model List<SignalRWebUi.Dtos.MenuTableDto.ResultMenuTableDto>
 @{
     ViewData["Title"] = "TableListByStatus";
     Layout = "~/Views/AdminLayout/Index.cshtml";
 }
+
+<div class="content">
 
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="content">
     <div class="container-fluid">
 
-        <script type="text/javascript">
+        <h4 class="page-title">Anlık Masa Durumları Sayfası</h4>
+        <div id="statuslist"></div>
 
-            $(document).ready(() => {
+    </div>
+</div><!-- Masa İşlem Modalı -->
+<div class="modal fade" id="tableActionModal" tabindex="-1" role="dialog" aria-labelledby="tableActionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tableActionModalLabel">Masa İşlemleri</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="$('#tableActionModal').modal('hide')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 id="selectedTableName" class="font-weight-bold text-primary"></h6>
+        <input type="hidden" id="selectedTableId" />
+        <input type="hidden" id="activeOrderId" />
+        
+        <div class="row mt-3">
+            <div class="col-md-6 border-right">
+                <h6 class="text-secondary">Sipariş Durumu</h6>
+                <button type="button" class="btn btn-sm btn-success mb-2" id="btnApproveOrder">Siparişi Onayla</button>
+                <button type="button" class="btn btn-sm btn-danger mb-2" id="btnRejectOrder">Siparişi Reddet</button>
+                <button type="button" class="btn btn-sm btn-info mb-2" id="btnCloseTable">Hesabı Kapat (Ödendi)</button>
+                
+                <hr />
+                <h6 class="text-secondary mt-2">Masa Aktarımı</h6>
+                <div class="input-group input-group-sm mb-3">
+                  <select class="form-control" id="emptyTableSelect">
+                      <option value="">Boş Masa Seçin</option>
+                  </select>
+                  <div class="input-group-append">
+                    <button class="btn btn-warning" type="button" id="btnTransferTable">Aktar</button>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <h6 class="text-secondary">Sipariş İçeriği</h6>
+                <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Adet</th>
+                                <th>Fiyat</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderDetailsTableBody">
+                            <!-- JS ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <hr />
+                <h6 class="text-secondary mt-2">Yeni Ürün Ekle</h6>
+                <div class="input-group input-group-sm mb-3">
+                  <select class="form-control" id="allProductsSelect">
+                      <option value="">Ürün Seçin</option>
+                  </select>
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" id="btnAddProduct">Ekle</button>
+                  </div>
+                </div>
+            </div>
+        </div>
 
-                var connection = new signalR.HubConnectionBuilder().withUrl("https://localhost:7195/SignalRHub").build();
-                $("#connstatus").text(connection.state);
-                connection.start().then(() => {
-                    $("#connstatus").text(connection.state);
-                    setInterval(() => {
-                        connection.invoke("GetMenuTableStatus");
-                    }, 1000);
-                }).catch((err) => { console.log(err) });
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#tableActionModal').modal('hide')">Kapat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(() => {
+        var apiHost = "https://" + window.location.hostname + ":7195";
+
+        // Ürünleri Sayfa açıldığında 1 kere çek
+        $.get(apiHost + "/api/Product", function(data) {
+            let selectHtml = '<option value="">Ürün Seçin</option>';
+            data.forEach(p => {
+                selectHtml += `<option value="${p.productID}">${p.productName} - ${p.price}₺</option>`;
+            });
+            $("#allProductsSelect").html(selectHtml);
+        });
+
+        var connection = new signalR.HubConnectionBuilder().withUrl(apiHost + "/SignalRHub").build();
+        $("#connstatus").text(connection.state);
+        connection.start().then(() => {
+            $("#connstatus").text(connection.state);
+            setInterval(() => {
+                connection.invoke("GetMenuTableStatus");
+            }, 1000);
+        }).catch((err) => { console.log(err) });
 
 
-                connection.on("ReceiveMenuTableStatus", (value) => {
-                    var color = "";
-                    var status = "";
-                    console.log(value);
-                    let tablehtml = `<div class="row">`;
-                    $.each(value, (index, item) => {
-                        if (item.status == true) {
-                            color="card card-stats card-success";
-                            status = "Masa Dolu";
-                        }
-                        else {
-            color="card card-stats card-danger";
-                            status = "Masa Boş";
-                        }
-                        tablehtml += `<div class="col-md-3">
-                                            <div class="${color}">
-                                                <div class="card-body ">
-                                                    <div class="row">
-                                                        <div class="col-5">
-                                                            <div class="icon-big text-center">
-                                                                <i class="la la-certificate"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 d-flex align-items-center">
-                                                            <div class="numbers">
-                                                                <p class="card-category">${item.name}</p>
-                                                                <h4 class="card-title">${status}</h4>
-                                                            </div>
-                                                        </div>
+        connection.on("ReceiveMenuTableStatus", (value) => {
+            var color = "";
+            var status = "";
+            let tablehtml = `<div class="row">`;
+            $.each(value, (index, item) => {
+                if (item.status == true) {
+                    color="card card-stats card-success";
+                    status = "Masa Dolu";
+                }
+                else {
+                    color="card card-stats card-danger";
+                    status = "Masa Boş";
+                }
+                tablehtml += `<div class="col-md-3">
+                                    <div class="${color}" style="cursor:pointer;" onclick="openTableModal(${item.menuTableID}, '${item.name}', ${item.status})">
+                                        <div class="card-body ">
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <div class="icon-big text-center">
+                                                        <i class="la la-certificate"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="col-7 d-flex align-items-center">
+                                                    <div class="numbers">
+                                                        <p class="card-category">${item.name}</p>
+                                                        <h4 class="card-title">${status}</h4>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>`
-                    });
-                    tablehtml += "</div>";
-                    $("#statuslist").html(tablehtml);
+                                        </div>
+                                    </div>
+                                </div>`
+            });
+            tablehtml += "</div>";
+            $("#statuslist").html(tablehtml);
+        });
+
+        // Globalden gelen bildirimi dinleyip tabloyu anlık güncelle
+        $(document).on("OrderReceived", function() {
+            connection.invoke("GetMenuTableStatus");
+        });
+
+        window.openTableModal = function (id, name, status) {
+            $("#selectedTableId").val(id);
+            $("#selectedTableName").text(name + " - İşlem Paneli");
+            
+            // Modal açılırken önceki verileri temizle!
+            $("#activeOrderId").val("");
+            $("#orderDetailsTableBody").html('<tr><td colspan="4" class="text-center">Yükleniyor...</td></tr>');
+            
+            // Eğer masa boşsa detayları çekmeye gerek yok, uyarı verip çıkılabilir veya sınırlı açılabilir
+            if(!status) {
+                Swal.fire('Bilgi', 'Seçilen masa şu an boş.', 'info');
+                return;
+            }
+
+            // Boş masaları çek
+            $.get(apiHost + "/api/MenuTables/GetEmptyTables", function(data) {
+                let selectHtml = '<option value="">Boş Masa Seçin</option>';
+                data.forEach(t => {
+                    selectHtml += `<option value="${t.menuTableID}">${t.name}</option>`;
                 });
+                $("#emptyTableSelect").html(selectHtml);
             });
 
-        </script>
+            // Sipariş detaylarını çek
+            loadOrderDetails(id);
 
-        <h4 class="page-title">Anlık Masa Durumları Sayfası</h4>
+            $('#tableActionModal').modal('show');
+        }
 
-        @*  @foreach (var item in Model)
-            { *@
-        @* if (item.Status == false)
-            {
-            color = "card card-stats card-danger";
-            status = "Masa Boş";
+        function loadOrderDetails(tableId) {
+            $.get(apiHost + "/api/MenuTables/GetActiveOrderDetails/" + tableId)
+            .done(function(data) {
+                $("#activeOrderId").val(data.orderId);
+                let tbodyHtml = "";
+                data.details.forEach(d => {
+                    // JSON'dan gelen orderDetailID büyük harfle bittiği için aynen orderDetailID olarak kullanılmalı
+                    tbodyHtml += `<tr>
+                                    <td>${d.productName}</td>
+                                    <td>${d.count}</td>
+                                    <td>${d.totalPrice}₺</td>
+                                    <td><button class="btn btn-sm btn-danger py-0 px-1" onclick="removeProduct(${d.orderDetailID})"><i class="la la-minus"></i></button></td>
+                                  </tr>`;
+                });
+                $("#orderDetailsTableBody").html(tbodyHtml);
+            })
+            .fail(function() {
+                $("#activeOrderId").val(""); // Fail durumunda kesinlikle temizle
+                $("#orderDetailsTableBody").html('<tr><td colspan="4" class="text-center text-muted">Aktif sipariş bulunamadı</td></tr>');
+            });
+        }
+
+        window.removeProduct = function(detailId) {
+            $.ajax({
+                type: "DELETE",
+                url: apiHost + "/api/MenuTables/RemoveProductFromOrder/" + detailId,
+                success: function (res) {
+                    toastr.success(res);
+                    loadOrderDetails($("#selectedTableId").val());
+                }
+            });
+        }
+
+        $("#btnAddProduct").click(function () {
+            let orderId = $("#activeOrderId").val();
+            let productId = $("#allProductsSelect").val();
+            
+            if(!orderId) {
+                Swal.fire('Hata', 'Bu masaya ait aktif bir sipariş fişi bulunmuyor. Müşteri sepete ürün eklemiş ancak henüz siparişi tamamlamamış olabilir.', 'error');
+                return;
             }
-            else
-            {
-            color = "card card-stats card-success";
-            status = "Masa Dolu";
-            } *@
-        <div id="statuslist"></div>
-        @* } *@
+            if(!productId) {
+                toastr.warning("Lütfen eklenecek ürünü seçin.");
+                return;
+            }
 
+            $.ajax({
+                type: "POST",
+                url: apiHost + "/api/MenuTables/AddProductToOrder?orderId=" + orderId + "&productId=" + productId,
+                success: function (res) {
+                    toastr.success(res);
+                    loadOrderDetails($("#selectedTableId").val());
+                }
+            });
+        });
 
-    </div>
-</div>
+        $("#btnApproveOrder").click(function () {
+            let id = $("#selectedTableId").val();
+            $.post(apiHost + "/api/MenuTables/ApproveOrder/" + id, function(res) {
+                Swal.fire('Başarılı', res, 'success');
+            });
+        });
 
+        $("#btnRejectOrder").click(function () {
+            let id = $("#selectedTableId").val();
+            $.post(apiHost + "/api/MenuTables/RejectOrder/" + id, function(res) {
+                Swal.fire('Başarılı', res, 'success');
+                $('#tableActionModal').modal('hide');
+            });
+        });
 
+        $("#btnCloseTable").click(function() {
+            let id = $("#selectedTableId").val();
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Hesap kapatılacak ve tutar kasaya eklenecektir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, kapat!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(apiHost + "/api/MenuTables/CloseTablePayment/" + id, function(res) {
+                        Swal.fire('Başarılı', res, 'success');
+                        $('#tableActionModal').modal('hide');
+                    });
+                }
+            });
+        });
+
+        $("#btnTransferTable").click(function() {
+            let oldId = $("#selectedTableId").val();
+            let newId = $("#emptyTableSelect").val();
+            if(!newId) { toastr.warning("Lütfen bir masa seçin"); return; }
+            
+            $.post(apiHost + `/api/MenuTables/TransferTable?oldTableId=${oldId}&newTableId=${newId}`, function(res) {
+                Swal.fire('Başarılı', res, 'success');
+                $('#tableActionModal').modal('hide');
+            });
+        });
+
+    });
+</script>

@@ -1,4 +1,4 @@
-﻿using SignalR.EntityLayer.Entities;
+using SignalR.EntityLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +12,11 @@ namespace SignalR.DataAccessLayer.Abstract
         int MenuTableCount();
         void ChangeMenuTableStatusToTrue(int id);
         void ChangeMenuTableStatusToFalse(int id);
+        void ApproveOrder(int id);
+        void RejectOrder(int id);
+        void TransferTable(int oldTableId, int newTableId);
+        void CloseTablePayment(int tableId);
+        void AddProductToOrder(int orderId, int productId);
+        void RemoveProductFromOrder(int orderDetailId);
     }
 }
